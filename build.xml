@@ -3,9 +3,9 @@
     <!--Jacoco的安装路径-->
   <property name="jacocoantPath" value="/Users/ailinghou/Documents/ant/jacoco-0.7.5.201505241946/lib/jacocoant.jar"/>
   <!--最终生成.exec文件的路径，Jacoco就是根据这个文件生成最终的报告的-->
-  <property name="jacocoexecPath" value="/Users/ailinghou/Documents/covereport/jacoco.exec"/>
+  <property name="jacocoexecPath" value="./jacoco.exec"/>
     <!--生成覆盖率报告的路径-->
-  <property name="reportfolderPath" value="/Users/ailinghou/Documents/covereport/resultReport"/>
+  <property name="reportfolderPath" value="./resultReport"/>
   <!--源代码路径-->
   <property name="srcDir" value="." />
   <!--.class文件路径-->
