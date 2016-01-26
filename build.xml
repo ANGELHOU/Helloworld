@@ -1,0 +1,70 @@
+<?xml version="1.0" ?>
+<project name="Lengyu" xmlns:jacoco="antlib:org.jacoco.ant" default="jacoco">
+    <!--Jacoco的安装路径-->
+  <property name="jacocoantPath" value="/Users/ailinghou/Documents/ant/jacoco-0.7.5.201505241946/lib/jacocoant.jar"/>
+  <!--最终生成.exec文件的路径，Jacoco就是根据这个文件生成最终的报告的-->
+  <property name="jacocoexecPath" value="/Users/ailinghou/Documents/covereport/jacoco.exec"/>
+    <!--生成覆盖率报告的路径-->
+  <property name="reportfolderPath" value="/Users/ailinghou/Documents/covereport/resultReport"/>
+  <!--源代码路径-->
+  <property name="srcDir" value="." />
+  <!--.class文件路径-->
+  <property name="resultsClassDir" value="./classes" />
+ 
+  <!--让ant知道去哪儿找Jacoco-->
+  <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+      <classpath path="${jacocoantPath}" />
+  </taskdef>
+ 
+  <!--dump任务:
+      根据前面配置的ip地址，和端口号，
+      访问目标tomcat服务，并生成.exec文件。
+  <target name="dump">
+      <jacoco:dump address="${server_ip}" reset="false" destfile="${jacocoexecPath}" port="${server_port}" append="true"/>
+  </target>-->
+   
+  <!--编译java文件-->
+  <target name="compile">
+      <mkdir dir="${resultsClassDir}"/>
+      <javac srcdir="${srcDir}" destdir="${resultsClassDir}" debug="True" includeantruntime="false"/>
+  </target>
+
+<!--wrap test execution with the jacoco coverage task-->
+  <target name="coverage" depends="compile">
+     <jacoco:coverage destfile="${jacocoexecPath}">
+      <java classname="Test" fork="True">
+          <classpath path="${resultsClassDir}"/>
+      </java>
+   </jacoco:coverage>
+  </target>
+
+  <!--jacoco任务:
+      根据前面配置的源代码路径和.class文件路径，
+      根据dump后，生成的.exec文件，生成最终的html覆盖率报告。-->
+  <target name="report">
+      <delete dir="${reportfolderPath}" />
+      <mkdir dir="${reportfolderPath}" />
+       <!--the class needs the collected execution data-->
+      <jacoco:report>
+          <executiondata>
+              <file file="${jacocoexecPath}" />
+          </executiondata>
+               
+          <structure name="JaCoCo Report">
+              <group name="Check Order related">           
+                  <classfiles>
+                      <fileset dir="${resultsClassDir}" />
+                  </classfiles>
+                  <sourcefiles encoding="gbk">
+                      <fileset dir="${srcDir}" />
+                  </sourcefiles>
+              </group>
+          </structure>
+ 
+          <html destdir="${reportfolderPath}" encoding="utf-8" /> 
+          <csv destfile="${reportfolderPath}/report.csv" encoding="utf-8" />         
+          <xml destfile="${reportfolderPath}/report.xml" encoding="utf-8" />         
+    </jacoco:report>
+  </target>
+</project>
+
